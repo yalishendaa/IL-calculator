@@ -36,21 +36,21 @@ with st.form("il_form"):
     submitted = st.form_submit_button("Calculate IL")
 
 if submitted:
-    # Считаем изначальную стоимость портфеля
+    if mode == "Individual USD Prices":
+        pass  # значения уже заданы выше
+    else:
+        price_a_entry = 1.0
+        price_b_entry = 1.0 / ratio_entry if ratio_entry != 0 else 1.0
+        price_a_now = 1.0
+        price_b_now = 1.0 / ratio_now if ratio_now != 0 else 1.0
+
     value_entry = deposit_token_a * price_a_entry + deposit_token_b * price_b_entry
+    ratio_entry_val = price_a_entry / price_b_entry
+    ratio_now_val = price_a_now / price_b_now
+    price_ratio = ratio_now_val / ratio_entry_val
 
-    # Отношения цен
-    ratio_entry = price_a_entry / price_b_entry
-    ratio_now = price_a_now / price_b_now
-    price_ratio = ratio_now / ratio_entry
-
-    # IL формула
     il_percent = 1 - (2 * math.sqrt(price_ratio) / (1 + price_ratio))
-
-    # Если просто держал
     value_now_hodl = deposit_token_a * price_a_now + deposit_token_b * price_b_now
-
-    # LP стоимость после изменения цен
     total_lp_value = value_entry * (2 * math.sqrt(price_ratio) / (1 + price_ratio))
     il_dollars = value_now_hodl - total_lp_value
 
